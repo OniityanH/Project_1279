@@ -1,6 +1,6 @@
 module.exports.loop = function(){
     var creep_list = [];
-    var creep1 = Game.creeps['Proj1279_Harvester1', 'Proj1279_Harvester2'];
+    var creep = Game.creeps['Proj1279_Harvester1', 'Proj1279_Harvester2'];
 
     if (creep.carry.energy < creep.carryCapacity){
 
