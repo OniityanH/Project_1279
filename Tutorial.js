@@ -139,8 +139,6 @@ module.exports.loop = function () {
 
 //tutorial 3 start
 
-
-
 //The Controller upgrade gives access to some new structures: walls, ramparts, and extensions. 
 //We’ll discuss walls and ramparts in the next Tutorial section, for now let’s talk about extensions.
 
@@ -150,4 +148,11 @@ module.exports.loop = function () {
 //However, such a creep will be costly and a lone spawn can only contain 300 energy units. 
 //To build creeps costing over 300 energy units you need spawn extensions.
 
+//The second Controller level has 5 extensions available for you to build. 
+//This number increases with each new level.
 
+//You can place extensions at any spot in your room, and a spawn can use them regardless of the distance. 
+//In this Tutorial we have already placed corresponding construction sites for your convenience.
+
+Game.spawns['Spawn1'].spawnCreep( [WORK, CARRY, MOVE], 'Builder1',
+    { memory: { role: 'builder' } } );
