@@ -115,3 +115,39 @@ var roleUpgrader = {
 
 module.exports = roleUpgrader;
 
+//In our main module, all creeps run the same role. We need to divide their behavior depending 
+//on the previously defined property Creep.memory.role by connecting the new module.
+//Apply the logic from the module role.upgrader to the creep with the 
+//role upgrader and check how it performed.
+var roleHarvester = require('role.harvester');
+var roleUpgrader = require('role.upgrader');
+
+module.exports.loop = function () {
+
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'harvester') {
+            roleHarvester.run(creep);
+        }
+        if(creep.memory.role == 'upgrader') {
+            roleUpgrader.run(creep);
+        }
+    }
+}
+
+//tutorial 2 finished
+
+//tutorial 3 start
+
+
+
+//The Controller upgrade gives access to some new structures: walls, ramparts, and extensions. 
+//We’ll discuss walls and ramparts in the next Tutorial section, for now let’s talk about extensions.
+
+//Extensions are required to build larger creeps. A creep with only one body part of one type works poorly. 
+//Giving it several WORKs will make him work proportionally faster.
+
+//However, such a creep will be costly and a lone spawn can only contain 300 energy units. 
+//To build creeps costing over 300 energy units you need spawn extensions.
+
+
