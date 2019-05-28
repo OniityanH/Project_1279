@@ -83,4 +83,35 @@ role.harvester:
         }
     };
     module.exports = roleHarvester;
-    //tutorial 1 finished
+//tutorial 1 finished
+
+
+// tutorial 2 start
+Game.spawns['Spawn1'].spawnCreep( [WORK, CARRY, MOVE], 'Upgrader1' );
+
+// Write a property role='harvester' into the memory of the harvester creep 
+// and role='upgrader' — to the upgrader creep with the help of the console.
+Game.creeps['Harvester1'].memory.role = 'harvester';
+Game.creeps['Upgrader1'].memory.role = 'upgrader';
+
+//Create a new module role.upgrader with the behavior logic of your new creep.
+var roleUpgrader = {
+
+    /** @param {Creep} creep **/
+    run: function(creep) {
+	    if(creep.carry.energy == 0) {
+            var sources = creep.room.find(FIND_SOURCES);
+            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[0]);
+            }
+        }
+        else {
+            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
+            }
+        }
+	}
+};
+
+module.exports = roleUpgrader;
+
