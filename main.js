@@ -39,7 +39,7 @@ module.exports.loop = function () {
     // if not enough harvesters
     if (numberOfHarvesters < minimumNumberOfHarvesters) {
         // try to spawn one
-        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Harvester_' + HarvesterNumber,
+        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE,MOVE], 'Harvester_' + HarvesterNumber,
             { role: 'harvester', working: false});
         HarvesterNumber = HarvesterNumber + 1;
     }
@@ -49,7 +49,7 @@ module.exports.loop = function () {
         //  more sense to have two move parts because they have to travel further
         name = Game.spawns.Spawn1.createCreep([WORK,CARRY,MOVE,MOVE], 'Upgrader_' + UpgraderNumber,
             { role: 'upgrader', working: false});
-        UpgraderNumber = HarvesterNumber + 1;
+        UpgraderNumber = UpgraderNumber + 1;
     }
 
     // print name to console if spawning was a success
