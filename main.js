@@ -4,6 +4,8 @@
             
             var creep = Game.creeps[name];
 
+            console.log(name + " is working: " + creep.memory.working);
+
             if (creep.memory.working == true && creep.carry.energy == 0){
                 creep.memory.working = false;
             }
