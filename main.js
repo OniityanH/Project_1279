@@ -1,5 +1,5 @@
     module.exports.loop = function(){
-        var creep = Game.creeps.Harverster1;
+        var creep = Game.creeps.Harvester1;
 
         if (creep.memory.working == true && creep.carry.energy == 0){
             creep.memory.working = false;
