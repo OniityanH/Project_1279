@@ -154,5 +154,115 @@ module.exports.loop = function () {
 //You can place extensions at any spot in your room, and a spawn can use them regardless of the distance. 
 //In this Tutorial we have already placed corresponding construction sites for your convenience.
 
+
+//Let’s create a new creep whose purpose is to build structures. 
+//This process will be similar to the previous Tutorial sections. 
+//But this time let’s set memory for the new creep right in the method Spawn.
+//spawnCreep by passing it in the third argument.
+
 Game.spawns['Spawn1'].spawnCreep( [WORK, CARRY, MOVE], 'Builder1',
     { memory: { role: 'builder' } } );
+
+
+//As before, let’s move this role into a separate module role.builder. 
+//The building is carried out by applying the method Creep.build to the construction sites searchable by Room.
+//find(FIND_CONSTRUCTION_SITES). The structure requires energy which your creep can harvest on its own.
+
+//To avoid having the creep run back and forth too often but make it deplete the cargo, 
+//let’s complicate our logic by creating a new Boolean variable creep.memory.
+//building which will tell the creep when to switch tasks. 
+//We'll also add new creep.say call and visualizePathStyle option to the moveTo method to visualize the creep's intentions.
+
+//Create the module role.builder with a behavior logic for a new creep.
+
+var roleBuilder = {
+
+    /** @param {Creep} creep **/
+    run: function(creep) {
+
+	    if(creep.memory.building && creep.carry.energy == 0) {
+            creep.memory.building = false;
+            creep.say('🔄 harvest');
+	    }
+	    if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
+	        creep.memory.building = true;
+	        creep.say('🚧 build');
+	    }
+
+	    if(creep.memory.building) {
+	        var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+            if(targets.length) {
+                if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+	    }
+	    else {
+	        var sources = creep.room.find(FIND_SOURCES);
+            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            }
+	    }
+	}
+};
+
+module.exports = roleBuilder;
+
+//Let’s create a call of the new role in the main module and wait for the result.
+//By using the module role.builder in the new creep, build all 5 extensions.
+
+var roleHarvester = require('role.harvester');
+var roleBuilder = require('role.builder');
+
+module.exports.loop = function () {
+
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'harvester') {
+            roleHarvester.run(creep);
+        }
+        if(creep.memory.role == 'builder') {
+            roleBuilder.run(creep);
+        }
+    }
+}
+
+/**
+ * Maintaining extensions requires you to teach your harvesters to 
+ * carry energy not just to a spawn but also to extensions. 
+ * To do this, you can either use the Game.structures object 
+ * or search within the room with the help of Room.find(FIND_STRUCTURES). 
+ * In both cases, you will need to filter the list of items on the condition 
+ * structure.structureType == STRUCTURE_EXTENSION (or, alternatively, 
+ * structure instanceof StructureExtension) and also check them for 
+ * energy load, as before.
+ */
+
+var roleHarvester = {
+
+    /** @param {Creep} creep **/
+    run: function(creep) {
+	    if(creep.carry.energy < creep.carryCapacity) {
+            var sources = creep.room.find(FIND_SOURCES);
+            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            }
+        }
+        else {
+            var targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+                            structure.energy < structure.energyCapacity;
+                    }
+            });
+            if(targets.length > 0) {
+                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+        }
+	}
+};
+
+module.exports = roleHarvester;
+
