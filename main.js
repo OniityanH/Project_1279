@@ -49,7 +49,7 @@ module.exports.loop = function () {
         //  more sense to have two move parts because they have to travel further
         name = Game.spawns.Spawn1.createCreep([WORK,CARRY,MOVE,MOVE], 'Upgrader_' + UpgraderNumber,
             { role: 'upgrader', working: false});
-        UpgraderNumber = HarvesterNumber + 1;
+        UpgraderNumber = UpgraderNumber + 1;
     }
 
     // print name to console if spawning was a success
