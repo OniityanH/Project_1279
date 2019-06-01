@@ -1,6 +1,7 @@
 // import modules
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
+var roleBuilder = require('role.builder');
 var HarvesterNumber = 0;
 var UpgraderNumber = 0;
 var BuilderNumber = 0;
@@ -27,6 +28,9 @@ module.exports.loop = function () {
         // if creep is upgrader, call upgrader script
         else if (creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
+        }
+        else if (creep.memory.role == 'builder') {
+            roleBuilder.run(creep);
         }
     }
 
