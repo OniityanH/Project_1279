@@ -35,7 +35,7 @@ module.exports.loop = function () {
     }
 
     // goal: have 10 harvesters and as many upgraders as possible
-    var minimumNumberOfHarvesters = 10;
+    var minimumNumberOfHarvesters = 6;
     var minimumNumberOfUpgraders = 5
     var minimumNumberOfBuilders = 1;
     // _.sum will count the number of properties in Game.creeps filtered by the
