@@ -19,7 +19,7 @@ module.exports = {
             var constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             if (constructionSite != undefined){
                 if (creep.build(constructionSite) == ERR_NOT_IN_RANGE){
-                    moveTo(constructionSite);
+                    creep.moveTo(constructionSite);
                 }
             }
             else {
