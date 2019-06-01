@@ -19,7 +19,7 @@ module.exports = {
             var constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             if (constructionSite != undefined){
                 if (creep.build(constructionSite) == ERR_NOT_IN_RANGE){
-                    creep.moveTo(constructionSite);
+                    creep.moveTo(constructionSite, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
             else {
@@ -33,7 +33,7 @@ module.exports = {
             // try to harvest energy, if the source is not in range
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 // move towards the source
-                creep.moveTo(source);
+                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
     }
