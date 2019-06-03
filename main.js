@@ -3,6 +3,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
+//reset all things
 
 module.exports.loop = function () {
     // check for memory entries of died creeps by iterating over Memory.creeps
