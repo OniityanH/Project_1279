@@ -4,7 +4,7 @@ var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
 var HarvesterNumber = 0;
-var UpgraderNumber = 0;s
+var UpgraderNumber = 0;
 var BuilderNumber = 0;
 var RepairerNumber = 0;
 
