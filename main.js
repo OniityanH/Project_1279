@@ -3,10 +3,6 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
-var HarvesterNumber = 0;
-var UpgraderNumber = 0;
-var BuilderNumber = 0;
-var RepairerNumber = 0;
 
 module.exports.loop = function () {
     // check for memory entries of died creeps by iterating over Memory.creeps
@@ -31,63 +27,64 @@ module.exports.loop = function () {
         else if (creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
         }
+        // if creep is builder, call builder script
         else if (creep.memory.role == 'builder') {
             roleBuilder.run(creep);
         }
-        else if (creep.memory.role == 'repairer'){
+        else if (creep.memory.role == 'repairer') {
             roleRepairer.run(creep);
         }
     }
 
-    // goal: have 10 harvesters and as many upgraders as possible
+    // setup some minimum numbers for different roles
     var minimumNumberOfHarvesters = 10;
-    var minimumNumberOfUpgraders = 3;
+    var minimumNumberOfUpgraders = 1;
     var minimumNumberOfBuilders = 1;
-    var minimumNumberOfRepairer = 2;
+    var minimumNumberOfRepairers = 2;
+
+    // count the number of creeps alive for each role
     // _.sum will count the number of properties in Game.creeps filtered by the
     //  arrow function, which checks for the creep being a harvester
     var numberOfHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
     var numberOfUpgraders = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
     var numberOfBuilders = _.sum(Game.creeps, (c) => c.memory.role == 'builder');
-    var numberOfRepairer = _.sum(Game.creeps, (c) => c.memory.role == 'repairer');
-    
+    var numberOfRepairers = _.sum(Game.creeps, (c) => c.memory.role == 'repairer');
+
     var name = undefined;
 
     // if not enough harvesters
     if (numberOfHarvesters < minimumNumberOfHarvesters) {
         // try to spawn one
-        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Harvester_' + HarvesterNumber,
+        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], undefined,
             { role: 'harvester', working: false});
-        HarvesterNumber = HarvesterNumber + 1;
     }
-    else if (numberOfUpgraders < minimumNumberOfUpgraders){
-        name = Game.spawns.Spawn1.createCreep([WORK,CARRY,MOVE,MOVE], 'Upgrader_' + UpgraderNumber,
+    // if not enough upgraders
+    else if (numberOfUpgraders < minimumNumberOfUpgraders) {
+        // try to spawn one
+        name = Game.spawns.Spawn1.createCreep([WORK,CARRY,MOVE,MOVE], undefined,
             { role: 'upgrader', working: false});
-        UpgraderNumber = UpgraderNumber + 1;
     }
-
-    else if (numberOfRepairer < minimumNumberOfRepairer){
-        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Repairer_' + RepairerNumber,
-            { role: 'reapirer', working: false});
-        RepairerNumber = RepairerNumber + 1;
+    // if not enough repairers
+    else if (numberOfRepairers < minimumNumberOfRepairers) {
+        // try to spawn one
+        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], undefined,
+            { role: 'repairer', working: false});
     }
-    else if (numberOfBuilders < minimumNumberOfBuilders){
-        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Builder_' + BuilderNumber,
+    // if not enough builders
+    else if (numberOfBuilders < minimumNumberOfBuilders) {
+        // try to spawn one
+        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], undefined,
             { role: 'builder', working: false});
-        BuilderNumber = BuilderNumber + 1;
     }
     else {
-        // else try to spawn an upgrader
-        // small change from what you saw in the video: for upgraders it makes
-        //  more sense to have two move parts because they have to travel further
-        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Builder_' + BuilderNumber,
+        // else try to spawn a builder
+        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], undefined,
             { role: 'builder', working: false});
-        BuilderNumber = BuilderNumber + 1;
     }
 
     // print name to console if spawning was a success
     // name > 0 would not work since string > 0 returns false
     if (!(name < 0)) {
-        console.log("Spawned new creep: " + name);
+        console.log("Spawned new " + creep.memory.role + " creep: " + name);
     }
 };
