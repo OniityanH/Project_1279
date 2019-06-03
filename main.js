@@ -2,9 +2,11 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer');
 var HarvesterNumber = 0;
-var UpgraderNumber = 0;
+var UpgraderNumber = 0;s
 var BuilderNumber = 0;
+var RepairerNumber = 0;
 
 module.exports.loop = function () {
     // check for memory entries of died creeps by iterating over Memory.creeps
@@ -32,17 +34,23 @@ module.exports.loop = function () {
         else if (creep.memory.role == 'builder') {
             roleBuilder.run(creep);
         }
+        else if (creep.memory.role == 'repairer'){
+            roleRepairer.run(creep);
+        }
     }
 
     // goal: have 10 harvesters and as many upgraders as possible
     var minimumNumberOfHarvesters = 10;
     var minimumNumberOfUpgraders = 3;
     var minimumNumberOfBuilders = 1;
+    var minimumNumberOfRepairer = 2;
     // _.sum will count the number of properties in Game.creeps filtered by the
     //  arrow function, which checks for the creep being a harvester
     var numberOfHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'harvester');
     var numberOfUpgraders = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
     var numberOfBuilders = _.sum(Game.creeps, (c) => c.memory.role == 'builder');
+    var numberOfRepairer = _.sum(Game.creeps, (c) => c.memory.role == 'repairer');
+    
     var name = undefined;
 
     // if not enough harvesters
@@ -58,6 +66,11 @@ module.exports.loop = function () {
         UpgraderNumber = UpgraderNumber + 1;
     }
 
+    else if (numberOfRepairer < minimumNumberOfRepairer){
+        name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Repairer_' + RepairerNumber,
+            { role: 'reapirer', working: false});
+        RepairerNumber = RepairerNumber + 1;
+    }
     else if (numberOfBuilders < minimumNumberOfBuilders){
         name = Game.spawns.Spawn1.createCreep([WORK,WORK,CARRY,MOVE], 'Builder_' + BuilderNumber,
             { role: 'builder', working: false});

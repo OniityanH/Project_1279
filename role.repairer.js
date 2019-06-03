@@ -1,3 +1,5 @@
+var roleUpgrader = require('role.builder');
+
 module.exports = {
     // a function to run the logic for this role
     run: function(creep) {
@@ -14,16 +16,18 @@ module.exports = {
 
         // if creep is supposed to transfer energy to the spawn
         if (creep.memory.working == true) {
-            var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES,
+            var structure = creep.pos.findClosestByPath(FIND_STRUCTURES,
                 {
-                    filter: (s) => s.energy < s.energyCapacity
+                    filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
                 });
+
             if (structure != undefined){
-                // try to transfer energy, if the spawn is not in range
-                if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    // move towards the spawn
-                    creep.moveTo(structure, {visualizePathStyle: {stroke: '#ffffff'}});
+                if (creep.repair(structure) == ERR_NOT_IN_RANGE){
+                    creep.moveTo(structure);
                 }
+            }
+            else{
+                roleBuilder.run(creep);
             }
         }
         // if creep is supposed to harvest energy from source
